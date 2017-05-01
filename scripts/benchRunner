@@ -20,9 +20,22 @@ function prettyMoe(moe) {
   return moe.toFixed(2) + '%';
 }
 
-fs.readdirSync('./lib/bench').forEach(function(file) {
-  var test, table;
-  if (isBench.test(file)) {
+function getFiles() {
+  const passedFiles = process.argv.slice(2);
+  if (passedFiles.length) {
+    return passedFiles.map(function(file) {
+      return file + '.bench.js';
+    });
+  } else {
+    return fs.readdirSync('./lib/bench').filter(function(file) {
+      return isBench.test(file);
+    });
+  }
+}
+
+function run(files) {
+  files.forEach(function(file) {
+    var test, table;
     test = require('../lib/bench/' + file);
     table = getTable(test.name);
     var suite = Benchmark.Suite(test.name, {
@@ -40,6 +53,7 @@ fs.readdirSync('./lib/bench').forEach(function(file) {
       });
     });
     suite.run();
-  }
-});
+  });
+}
 
+run(getFiles());

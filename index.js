@@ -1,4 +1,5 @@
 module.exports = {
+  equals2: require('./src/equals2'),
   F: require('./src/F'),
   T: require('./src/T'),
   __: require('./src/__'),
